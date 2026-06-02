@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DuFlow - 스마트한 과제 관리</title>
+    <style>
+        /* 기본 스타일 초기화 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Malgun Gothic', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        /* 1. 사이드바 스타일 (DuFlow 메뉴) */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #ffffff;
+            border-right: 1px solid #e9ecef;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1b4d3e; /* 명세서 톤앤매너 반영 */
+            margin-bottom: 30px;
+        }
+
+        .menu-list {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: #e8f5e9;
+            color: #1b4d3e;
+        }
+
+        /* 프로 배너 */
+        .pro-banner {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-size: 13px;
+        }
+        .pro-banner a {
+            color: #856404;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* 2. 메인 콘텐츠 영역 */
+        .main-content {
+            margin-left: 250px;
+            flex-1: 1;
+            width: calc(100% - 250px);
+            padding: 40px;
+        }
+
+        /* 상단 네비게이션 헤더 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .user-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 18px;
+        }
+
+        .header-icons {
+            display: flex;
+            gap: 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* 웰컴 배너 */
+        .welcome-box {
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        .welcome-box h2 {
+            margin-bottom: 10px;
+        }
+        .btn-link {
+            color: #1b4d3e;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* 대시보드 그리드 레이아웃 */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #1b4d3e;
+            border-bottom: 2px solid #e8f5e9;
+            padding-bottom: 8px;
+        }
+
+        /* 과제 자동 분류 스타일 */
+        .category-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .category-item {
+            background: #f1f3f5;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        /* AI 참여도 테이블 스타일 */
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .ranking-table th, .ranking-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .ranking-table th {
+            background-color: #f8f9fa;
+        }
+
+        /* 제출함 스타일 */
+        .submission-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f3f5;
+            font-size: 14px;
+        }
+        .status-done { color: green; font-weight: bold; }
+        .status-yet { color: orange; font-weight: bold; }
+
+        /* 일정 스타일 */
+        .schedule-item {
+            display: flex;
+            gap: 15px;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+        .schedule-time {
+            color: #1b4d3e;
+            font-weight: bold;
+            min-width: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">DuFlow</div>
+        <ul class="menu-list">
+            <li class="menu-item active">🏠 홈</li>
+            <li class="menu-item">📋 내 과제</li>
+            <li class="menu-item">👥 팀 프로젝트</li>
+            <li class="menu-item">📖 과제 자동 분류</li> <li class="menu-item">📂 제출함</li> <li class="menu-item">📅 캘린더</li>
+            <li class="menu-item">󰞹 교수 소개</li> <li class="menu-item">📊 성적 확인</li> <li class="menu-item">🎥 화상회의</li> <li class="menu-item">⚙ 설정</li>
+        </ul>
+
+        <div class="pro-banner">
+            <strong>👑 DuFlow Pro</strong><br>
+            더 강력한 AI 기능 경험하기<br>
+            <a href="#">자세히 보기 →</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="header">
+            <div class="user-status">
+                <strong>안녕하세요, 김듀플님 👋</strong>
+            </div>
+            <div class="header-icons">
+                <span>🔔</span>
+                <span>✉</span>
+                <span>👤</span>
+            </div>
+        </div>
+
+        <div class="welcome-box">
+            <h2>오늘도 듀플로우와 함께 스마트한 하루를 시작해요.</h2>
+            <p>체계적인 과제 관리로 더 나은 성과를 만들어보세요.</p>
+            <a href="#" class="btn-link">내 과제 보러가기 →</a>
+        </div>
+
+        <div class="dashboard-grid">
+            
+            <div class="card">
+                <h3>📖 과제 자동 분류</h3>
+                <div class="category-list">
+                    <div class="category-item"><strong>국어교육론 과제</strong> <span style="color:#666; font-size:12px;">| 국어교육</span></div>
+                    <div class="category-item"><strong>교육공학 리포트</strong> <span style="color:#666; font-size:12px;">| 교육공학</span></div>
+                </div>
+                <div style="margin-top: 15px; font-size: 12px; color: #888;">
+                    * 로그인 정보: 대학 (학교 선택 기능 연동 완료)
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 AI 참여도 분석 (팀원별)</h3>
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>순위</th>
+                            <th>팀원</th>
+                            <th>점수</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🥇 1등</td>
+                            <td><strong>김듀플(나)</strong></td>
+                            <td>92점</td>
+                        </tr>
+                        <tr>
+                            <td>🥈 2등</td>
+                            <td>이서연</td>
+                            <td>85점</td>
+                        </tr>
+                        <tr>
+                            <td>🥉 3등</td>
+                            <td>박지훈</td>
+                            <td>78점</td>
+                        </tr>
+                        <tr>
+                            <td>4등</td>
+                            <td>최은지</td>
+                            <td>72점</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <h3>📂 제출함</h3>
+                <div class="submission-item">
+                    <span>국어교육론 과제</span>
+                    <span class="status-done">✅ 제출완료</span>
+                </div>
+                <div class="submission-item">
+                    <span>교육공학 리포트</span>
+                    <span class="status-yet">⏳ 제출예정</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📅 오늘 일정</h3>
+                <div class="schedule-item">
+                    <span class="schedule-time">10:00</span>
+                    <span>국어교육론 과제 마감</span>
+                </div>
+                <div class="schedule-item">
+                    <span class="schedule-time">14:00</span>
+                    <span>팀 프로젝트 회의 (화상회의 기능 연동 예정)</span>
+                </div>
+                <div class="schedule-item">
+                    <span class="schedule-time">17:00</span>
+                    <span>교육공학 리포트 제출</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
