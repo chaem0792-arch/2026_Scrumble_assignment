@@ -217,8 +217,9 @@
             if (matched) {
                 localStorage.setItem('duflow_loggedIn', 'true');
                 localStorage.setItem('duflow_currentUser', matched.name);
+                localStorage.setItem('duflow_currentRole', matched.role === 'professor' ? '교수' : '학생');
                 errorMsg.style.display = 'none';
-                location.href = 'as_home.html';
+                location.href = 'index.html';
             } else {
                 errorMsg.style.display = 'block';
             }
@@ -231,7 +232,7 @@
 
         // 이미 로그인된 경우 홈으로
         if (localStorage.getItem('duflow_loggedIn') === 'true') {
-            location.href = 'as_home.html';
+            location.href = 'index.html';
         }
     </script>
 
