@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DuFlow - 회원가입</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Malgun Gothic', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1b4d3e;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .logo-sub {
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 36px 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1b4d3e;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 6px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Malgun Gothic', sans-serif;
+            color: #333;
+            background: #f8f9fa;
+            transition: border-color 0.2s, background 0.2s;
+            outline: none;
+            appearance: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #1b4d3e;
+            background: #ffffff;
+        }
+
+        .select-wrap {
+            position: relative;
+        }
+
+        .select-wrap::after {
+            content: '▾';
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            pointer-events: none;
+            font-size: 13px;
+        }
+
+        .hint {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        .error-msg {
+            font-size: 12px;
+            color: #d9534f;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-msg {
+            font-size: 12px;
+            color: #1b4d3e;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .divider-line {
+            height: 1px;
+            background: #e9ecef;
+            margin: 20px 0;
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #1b4d3e;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .role-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background: #f8f9fa;
+            font-size: 14px;
+            font-family: 'Malgun Gothic', sans-serif;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            color: #555;
+        }
+
+        .role-btn.selected {
+            border-color: #1b4d3e;
+            background-color: #e8f5e9;
+            color: #1b4d3e;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background-color: #1b4d3e;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            font-family: 'Malgun Gothic', sans-serif;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #163d31;
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            margin-top: 20px;
+        }
+
+        .footer-text a {
+            color: #1b4d3e;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* 성공 모달 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px 28px;
+            max-width: 320px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+        }
+
+        .modal-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .modal-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #1b4d3e;
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 11px;
+            background-color: #1b4d3e;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: 'Malgun Gothic', sans-serif;
+            cursor: pointer;
+        }
+
+        .modal-btn:hover {
+            background-color: #163d31;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="logo">DuFlow</div>
+        <div class="logo-sub">스마트한 팀 과제 관리 플랫폼</div>
+
+        <div class="card">
+            <div class="card-title">회원가입</div>
+
+            <!-- 역할 선택 -->
+            <div class="section-label">👤 역할 선택</div>
+            <div class="role-group" style="margin-bottom: 20px;">
+                <div class="role-btn selected" id="role-student" onclick="selectRole('student')">🎓 학생</div>
+                <div class="role-btn" id="role-professor" onclick="selectRole('professor')">👨‍🏫 교수</div>
+            </div>
+
+            <div class="divider-line"></div>
+
+            <!-- 기본 정보 -->
+            <div class="section-label" style="margin-top: 16px;">📋 기본 정보</div>
+
+            <div class="form-group">
+                <label for="userName">이름</label>
+                <input type="text" id="userName" placeholder="실명을 입력하세요">
+                <div class="error-msg" id="nameError">이름을 입력해주세요.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="userId">아이디</label>
+                <input type="text" id="userId" placeholder="영문/숫자 6~20자">
+                <div class="error-msg" id="idError">아이디를 입력해주세요.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="userEmail">이메일</label>
+                <input type="email" id="userEmail" placeholder="example@university.ac.kr">
+                <div class="error-msg" id="emailError">올바른 이메일을 입력해주세요.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="userPw">비밀번호</label>
+                <input type="password" id="userPw" placeholder="8자 이상 입력하세요">
+                <div class="hint">영문, 숫자를 포함한 8자 이상</div>
+                <div class="error-msg" id="pwError">비밀번호를 8자 이상 입력해주세요.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="userPwConfirm">비밀번호 확인</label>
+                <input type="password" id="userPwConfirm" placeholder="비밀번호를 다시 입력하세요">
+                <div class="error-msg" id="pwConfirmError">비밀번호가 일치하지 않습니다.</div>
+            </div>
+
+            <div class="divider-line"></div>
+
+            <!-- 학교 정보 -->
+            <div class="section-label" style="margin-top:4px;">🏫 학교 정보</div>
+
+            <div class="form-group">
+                <label for="university">대학교</label>
+                <div class="select-wrap">
+                    <select id="university">
+                        <option value="">대학교를 선택하세요</option>
+                        <option>서울대학교</option>
+                        <option>연세대학교</option>
+                        <option>고려대학교</option>
+                        <option>성균관대학교</option>
+                        <option>한양대학교</option>
+                        <option>중앙대학교</option>
+                        <option>경희대학교</option>
+                        <option>기타</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" id="deptGroup">
+                <label for="department">학과</label>
+                <input type="text" id="department" placeholder="소속 학과를 입력하세요">
+            </div>
+
+            <button class="btn-primary" onclick="doRegister()">가입하기</button>
+        </div>
+
+        <div class="footer-text">
+            이미 계정이 있으신가요? <a href="login.html">로그인하기</a>
+        </div>
+
+    </div>
+
+    <!-- 성공 모달 -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal">
+            <div class="modal-icon">🎉</div>
+            <div class="modal-title">가입이 완료됐어요!</div>
+            <div class="modal-desc" id="modalDesc">DuFlow에 오신 것을 환영합니다.<br>로그인 후 서비스를 이용해보세요.</div>
+            <button class="modal-btn" onclick="location.href='login.html'">로그인하러 가기</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedRole = 'student';
+
+        function selectRole(role) {
+            selectedRole = role;
+            document.getElementById('role-student').classList.toggle('selected', role === 'student');
+            document.getElementById('role-professor').classList.toggle('selected', role === 'professor');
+        }
+
+        function showError(id, show) {
+            document.getElementById(id).style.display = show ? 'block' : 'none';
+        }
+
+        function doRegister() {
+            const name     = document.getElementById('userName').value.trim();
+            const id       = document.getElementById('userId').value.trim();
+            const email    = document.getElementById('userEmail').value.trim();
+            const pw       = document.getElementById('userPw').value;
+            const pwc      = document.getElementById('userPwConfirm').value;
+
+            let valid = true;
+
+            if (!name)                          { showError('nameError', true);      valid = false; } else { showError('nameError', false); }
+            if (!id)                            { showError('idError', true);        valid = false; } else { showError('idError', false); }
+            if (!email || !email.includes('@')) { showError('emailError', true);     valid = false; } else { showError('emailError', false); }
+            if (pw.length < 8)                  { showError('pwError', true);        valid = false; } else { showError('pwError', false); }
+            if (pw !== pwc)                     { showError('pwConfirmError', true); valid = false; } else { showError('pwConfirmError', false); }
+
+            if (!valid) return;
+
+            // localStorage에 사용자 저장
+            const users = JSON.parse(localStorage.getItem('duflow_users') || '[]');
+            users.push({ id, name, email, password: pw, role: selectedRole });
+            localStorage.setItem('duflow_users', JSON.stringify(users));
+
+            // 성공 모달 표시
+            document.getElementById('modalDesc').innerHTML =
+                `<strong>${name}</strong>님, DuFlow에 오신 것을 환영합니다!<br>로그인 후 서비스를 이용해보세요.`;
+            document.getElementById('successModal').classList.add('show');
+        }
+    </script>
+
+</body>
+</html>
